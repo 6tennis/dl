@@ -14,7 +14,6 @@ class Sylas(Adv):
         `dragon.act("c3 s end")
         `s1
         `s2
-        `s3, seq=5
         `fs, seq=5
         """
     coab = ['Eleonora','Dragonyule_Xainfried','Lin_You']
@@ -26,10 +25,11 @@ class Sylas(Adv):
 
     def s1_proc(self, e):
         self.afflics.poison('s1',120,0.582)
+        with KillerModifier('s1_killer', 'hit', 0.5, ['poison']):
+            self.dmg_make('s1', 11.04)
 
     def s2_proc(self, e):
-        Selfbuff('s2_shaste',0.20,15,'sp','buff').on()
-
+        Selfbuff('s2_shaste',0.30,15,'sp','buff').on()
 
 if __name__ == '__main__':
     from core.simulate import test_with_argv
