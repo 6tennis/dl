@@ -1,26 +1,27 @@
 from core.advbase import *
 from slot.a.all import *
-from slot.d.flame import *
+from slot.d.wind import *
 
 def module():
-    return Aurien
+    return Sophie
 
-class Aurien(Adv):
+class Sophie(Adv):
     comment = 'no s1'
-    a1 = ('s',0.4,'hp70')
 
     conf = {}
-    conf['slots.a'] = Primal_Crisis()+Elegant_Escort()
+    conf['slots.a'] = Primal_Crisis()+The_Fires_of_Hate()
+    conf['slots.d'] = Garland()
     conf['acl'] = """
         `dragon
         `s3, not self.s3_buff
         `s2, x=5
     """
-    conf['afflict_res.burn'] = 0
-    coab = ['Blade', 'Marth', 'Tiki']
+    coab = ['Blade', 'Tiki', 'Lin_You']
+    conf['afflict_res.poison'] = 0
+
 
     def s2_proc(self, e):
-        self.afflics.burn('s2',100,0.803)
+        self.afflics.poison('s2', 120, 0.582)
 
 if __name__ == '__main__':
     from core.simulate import test_with_argv

@@ -14,17 +14,13 @@ class Gala_Ranzal(Adv):
     conf['slots.d'] = AC011_Garland()
     conf['acl'] = '''
         `dragon.act("c3 s end")
+        `s3, not self.s3_buff
         `s1, fsc
-        `s3, fsc
         `fs, seq=2 and self.gauges['x'] <= 500
         `fs, seq=3
     '''
     coab = ['Blade','Dragonyule_Xainfried','Lin_You']
     
-    def d_slots(self):
-        if self.slots.c.has_ex('bow'):
-            self.conf.slot.a = TSO()+BN()
-
     a3 = ('s',0.3)
 
     #c3 770

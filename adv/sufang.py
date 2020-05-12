@@ -11,9 +11,9 @@ class Su_Fang(Adv):
     conf['slots.a'] = Twinfold_Bonds()+The_Fires_of_Hate()
     conf['acl'] = """
         `dragon.act("c3 s end")
+        `s3, not self.s3_buff
         `s2, fsc
         `s1
-        `s3, fsc
         `fs, x=4
         """
     coab = ['Blade','Dragonyule_Xainfried','Lin_You']
@@ -30,7 +30,8 @@ class Su_Fang(Adv):
         with KillerModifier('skiller', 'hit', 0.50, ['poison']):
             self.dmg_make('s1', 5.58)
             if self.s2_buff.get():
-                self.dmg_make('s1', 1.30)
+                self.dmg_make('s1', 2.60)
+                self.hits += 2
 
     def s2_proc(self, e):
         self.fs_alt.on(1)

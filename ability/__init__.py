@@ -166,7 +166,10 @@ class Co_Ability(Ability):
         'geuden': [('da','passive',0.10),('dt','passive',0.20)],
         'megaman': [('killer','passive',0.15*Overdrive_Punisher.EFFICIENCY)],
         'tobias': [('buff','time',0.20)],
-        'grace': [('fs','ex',0.20)]
+        'grace': [('fs','ex',0.20)],
+        'sharena': [('paralysis_killer', 'passive', 0.08)],
+        'peony': [('light','ele',0.20)],
+        'tiki': [('x','ex',0.20)],
     }
     def __init__(self, name, value, cond=None):
         try:
@@ -240,7 +243,18 @@ class Doublebuff_CD(Doublebuff):
 ability_dict['bcc'] = Doublebuff
 
 
-class Slayer_Strength(BuffingAbility):
+# class Slayer_Strength(BuffingAbility):
+#     def __init__(self, name, value):
+#         super().__init__(name, value, -1)
+
+#     def oninit(self, adv, afrom=None):
+#         for _ in range(5):
+#             adv.Buff(*self.buff_args).on()
+
+# ability_dict['sts'] = Slayer_Strength
+# ability_dict['sls'] = Slayer_Strength
+
+class Slayers(BuffingAbility):
     def __init__(self, name, value):
         super().__init__(name, value, -1)
 
@@ -248,8 +262,8 @@ class Slayer_Strength(BuffingAbility):
         for _ in range(5):
             adv.Buff(*self.buff_args).on()
 
-ability_dict['sts'] = Slayer_Strength
-ability_dict['sls'] = Slayer_Strength
+ability_dict['slayers'] = Slayers
+
 
 class Dragon_Buff(Ability):
     def __init__(self, name, dc_values, buff_args=()):

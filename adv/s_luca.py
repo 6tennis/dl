@@ -9,6 +9,7 @@ class Summer_Luca(Adv):
 
     conf = {}
     conf['slots.a'] = RR()+Breakfast_at_Valerios()
+    conf['slots.paralysis.a'] = Kung_Fu_Masters()+Spirit_of_the_Season()
     conf['acl'] = """
         `dragon, cancel
         `s1
@@ -16,7 +17,7 @@ class Summer_Luca(Adv):
         `s3,seq=4
         `fs, x=5
         """
-    coab = ['Blade','Dagger','Halloween_Elisanne']
+    coab = ['Blade','Dagger','Peony']
 
     def d_slots(self):
         if self.slots.c.has_ex('bow'):

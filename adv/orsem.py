@@ -9,7 +9,7 @@ class Orsem(Adv):
     a3 = ('cc',0.06,'hp70')
     
     conf = {}
-    conf['slots.d'] = Leviathan()
+    conf['slots.d'] = Nimis()
     conf['acl'] = """
         `dragon
         `s1
@@ -17,8 +17,7 @@ class Orsem(Adv):
         `s3, fsc
         `fs, x=4
     """
-    coab = ['Blade', 'Xander', 'Wand']
-
+    coab = ['Tiki', 'Xander', 'Pipple']
 
 if __name__ == '__main__':
     from core.simulate import test_with_argv

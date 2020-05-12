@@ -6,13 +6,12 @@ def module():
 class Kirsty(Adv):
     a3 = ('k_poison',0.3)
 
-    comment = 'no poison'
     conf = {}
     conf['acl'] = """
         `dragon.act("c3 s end")
+        `s3, not self.s3_buff
         `s1
         `s2, seq=5
-        `s3, seq=5
         """
     coab = ['Blade','Dragonyule_Xainfried','Akasha']
 

@@ -9,7 +9,7 @@ class Dragonyule_Malora(Adv):
     a1 = ('od',0.13)
 
     conf = {}
-    conf['slots.a'] = The_Wyrmclan_Duo() + Primal_Crisis()
+    conf['slots.a'] = Summer_Paladyns() + Primal_Crisis()
     conf['slots.paralysis.a'] = Resounding_Rendition() + Spirit_of_the_Season()
     conf['acl'] = """
         `dragon.act("c3 s end")
@@ -17,7 +17,7 @@ class Dragonyule_Malora(Adv):
         `s2, self.def_mod()!=1
         `fsf, x=4 and (s1.charged == self.sp_val(4))
         """
-    coab = ['Blade','Dagger','Halloween_Elisanne']
+    coab = ['Blade','Dagger','Peony']
 
     def prerun(self):
         if self.condition('buff all team'):

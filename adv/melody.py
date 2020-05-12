@@ -12,10 +12,11 @@ class Melody(Adv):
     conf['slots.a'] = A_Dogs_Day()+From_Whence_He_Comes()
     conf['slots.d'] = Ariel()
     conf['acl'] = """
+        `s3, not self.s3_buff
         `s1
         `fs, x = 5
     """
-    coab = ['Bow','Tobias','Lin_You']
+    coab = ['Bow','Tobias','Tiki']
 
 
 if __name__ == '__main__':

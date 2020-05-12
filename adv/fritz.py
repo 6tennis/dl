@@ -6,12 +6,13 @@ def module():
 class Fritz(Adv):
     conf = {}
     conf['acl'] = """
+        `dragon
         `s1, x=5 and cancel or fsc
         `s2
         `s3
         `fs, x=5
         """
-    coab = ['Blade','Wand','Halloween_Elisanne']
+    coab = ['Blade','Halloween_Elisanne','Peony']
 
     def prerun(self):
         self.stance = 0

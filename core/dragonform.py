@@ -41,6 +41,7 @@ class DragonForm(Action):
             self.off_ele_mod.off()
 
         self.dragon_gauge = 0
+        self.dragon_gauge_val = self.conf.gauge_val
         self.dragon_gauge_timer = Timer(self.auto_gauge, timeout=max(1, self.conf.gauge_iv), repeat=1).on()
         self.dragon_gauge_timer_diff = 0
         self.max_gauge = 1000
@@ -51,15 +52,20 @@ class DragonForm(Action):
 
         self.is_dragondrive = False
 
-    def set_dragondrive(self, dd_buff):
+    def set_dragondrive(self, dd_buff, max_gauge=3000, shift_cost=1200, drain=150):
         self.disabled = False
         self.is_dragondrive = True
         self.shift_event = Event('dragondrive')
         self.dragondrive_end_event = Event('dragondrive_end')
-        self.max_gauge = 3000
-        self.shift_cost = 1200 # does not deduct, but need to have this much pt to shift
+        ratio = max_gauge / self.max_gauge
+        self.dragon_gauge *= ratio
+        self.dragon_gauge_val *= ratio
+        self.max_gauge = max_gauge
+        self.shift_cost = shift_cost # does not deduct, but need to have this much pt to shift
+        self.drain = drain
         self.dragondrive_buff = dd_buff
         self.dragondrive_timer = Timer(self.d_dragondrive_end)
+        return self.dragondrive_buff
 
     def end_silence(self, t):
         self.shift_silence = False
@@ -72,7 +78,7 @@ class DragonForm(Action):
         return combo > dodge
 
     def auto_gauge(self, t):
-        self.charge_gauge(self.conf.gauge_val)
+        self.charge_gauge(self.dragon_gauge_val)
 
     def pause_auto_gauge(self):
         self.dragon_gauge_timer_diff = self.dragon_gauge_timer.timing - now()
@@ -82,24 +88,28 @@ class DragonForm(Action):
         self.auto_gauge(t)
         self.dragon_gauge_timer.on()
 
-    def add_drive_gauge_time(self, delta):
+    def add_drive_gauge_time(self, delta, skill_pause=False):
+        max_duration = self.max_gauge/self.drain
         duration = self.dragondrive_timer.timing - now()
-        max_add = 20 - duration
-        add_time = min((20*delta)/self.max_gauge, max_add)
+        max_add = max_duration - duration
+        if skill_pause:
+            add_time = min(delta, max_add)
+        else:
+            add_time = min(delta/self.drain, max_add)
         self.dragondrive_timer.add(add_time)
         duration = self.dragondrive_timer.timing - now()
         if duration <= 0:
-            self.d_dragondrive_end(None)
+            self.d_dragondrive_end('<gauge deplete>')
             self.dragon_gauge = 0
         else:
-            self.dragon_gauge = (duration/20)*self.max_gauge
-            log('drive_time', f'{add_time:+2.4}', f'{duration:2.4}', '{:.2f}%'.format(self.dragon_gauge/self.max_gauge*100))
+            self.dragon_gauge = (duration/max_duration)*self.max_gauge
+            if add_time > 0:
+                log('drive_time' if not skill_pause else 'skill_pause', f'{add_time:+2.4}', f'{duration:2.4}', f'{int(self.dragon_gauge)}/{int(self.max_gauge)}')
 
-    def charge_gauge(self, value, percent=True):
-        # if self.status != -1:
-        # ignore dragonform blocking gauge (as it would in game) to avoid break-pointy bullshit
-        dh = 1 if self.is_dragondrive else self.adv.mod('dh')
-        if percent:
+    def charge_gauge(self, value, utp=False, dhaste=False):
+        dhaste = dhaste or not utp
+        dh = self.adv.mod('dh') if dhaste else 1
+        if not utp:
             value *= 10
         value = self.adv.sp_convert(dh, value)
         delta = min(self.dragon_gauge+value, self.max_gauge) - self.dragon_gauge
@@ -107,7 +117,10 @@ class DragonForm(Action):
             self.add_drive_gauge_time(delta)
         elif delta > 0:
             self.dragon_gauge += delta
-            log('dragon_gauge', '{:+.2f}%'.format(delta/self.max_gauge*100), '{:.2f}%'.format(self.dragon_gauge/self.max_gauge*100))
+            if utp:
+                log('dragon_gauge', '{:+} utp'.format(int(delta)), f'{int(self.dragon_gauge)}/{int(self.max_gauge)}')
+            else:
+                log('dragon_gauge', '{:+.2f}%'.format(delta/self.max_gauge*100), '{:.2f}%'.format(self.dragon_gauge/self.max_gauge*100))
 
     def dtime(self):
         return self.conf.dshift.startup + self.conf.duration * self.adv.mod('dt') + self.conf.exhilaration * (self.off_ele_mod is None)
@@ -135,9 +148,10 @@ class DragonForm(Action):
         if self.off_ele_mod is not None:
             self.off_ele_mod.off()
         self.ds_reset()
-        self.shift_silence = True
-        Timer(self.end_silence).on(10)
-        Timer(self.resume_auto_gauge).on(self.dragon_gauge_timer_diff)
+        if not self.is_dragondrive:
+            self.shift_silence = True
+            Timer(self.end_silence).on(10)
+            Timer(self.resume_auto_gauge).on(self.dragon_gauge_timer_diff)
         self.status = -2
         self._setprev() # turn self from doing to prev
         self._static.doing = self.nop
@@ -145,10 +159,10 @@ class DragonForm(Action):
         self.idle_event()
 
     def d_dragondrive_end(self, t):
-        log('dragondrive', 'end')
+        log('dragondrive', 'end', t if isinstance(t, str) else '<timeout>')
         self.dragondrive_buff.off()
+        self.shift_silence = True
         Timer(self.end_silence).on(10)
-        Timer(self.resume_auto_gauge).on(self.dragon_gauge_timer_diff)
         self.status = -2
         self._setprev() # turn self from doing to prev
         self._static.doing = self.nop
@@ -189,7 +203,7 @@ class DragonForm(Action):
             return
         elif self.c_act_name != 'dodge':
             # dname = self.c_act_name[:-1] if self.c_act_name != 'dshift' else self.c_act_name
-            self.shift_damage_sum += self.adv.dmg_make(self.c_act_name, self.c_act_conf.dmg)
+            self.shift_damage_sum += self.adv.dmg_make(self.c_act_name, self.c_act_conf.dmg, 'x' if self.c_act_name != 'dshift' else self.c_act_name)
             if self.c_act_name.startswith('dx'):
                 if len(self.act_sum) > 0 and self.act_sum[-1][0] == 'c' and int(self.act_sum[-1][1]) < int(self.c_act_name[-1]):
                     self.act_sum[-1] = 'c'+self.c_act_name[-1]
@@ -257,7 +271,9 @@ class DragonForm(Action):
         return self()
 
     def check(self, dryrun=True):
-        if self.disabled or self.shift_silence or self.dragon_gauge < self.shift_cost:
+        if self.disabled or self.shift_silence:
+            return False
+        if self.dragon_gauge < self.shift_cost and not (self.is_dragondrive and self.dragondrive_buff.get()):
             return False
         doing = self.getdoing()
         if not doing.idle:
@@ -279,10 +295,10 @@ class DragonForm(Action):
         if self.is_dragondrive:
             self.act_list = ['end']
             if self.dragondrive_buff.get():
-                self.d_dragondrive_end(None)
+                self.d_dragondrive_end('<turn off>')
                 return True
             else:
-                self.dragondrive_timer.on(20)
+                self.dragondrive_timer.on(self.max_gauge/self.drain)
                 self.dragondrive_buff.on()
         else:
             if len(self.act_list) == 0:
@@ -292,10 +308,10 @@ class DragonForm(Action):
             self.dracolith_mod.on()
             if self.off_ele_mod is not None:
                 self.off_ele_mod.on()
+            self.pause_auto_gauge()
         self.shift_damage_sum = 0
         self.status = -1
         self._setdoing()
-        self.pause_auto_gauge()
         self.shift_start_time = now()
         self.shift_end_timer.on(self.dtime())
         self.shift_event()

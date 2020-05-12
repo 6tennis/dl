@@ -11,11 +11,11 @@ class Templar_Hope(Adv):
     conf['slots.d'] = AC011_Garland()
     conf['acl'] = """
         `dragon
+        `s3, not self.s3_buff
         `s2
-        `s3
         `fs, x=2
         """
-    coab = ['Blade','Dragonyule_Xainfried','Lin_You']
+    coab = ['Blade','Dragonyule_Xainfried','Tiki']
     
     def s1_proc(self, e):
         Teambuff('s1', 0.25, 15, 'defense').on()

@@ -131,10 +131,14 @@ def test(classname, conf={}, duration=180, verbose=0, mass=None, output=None, te
     return run_results
 
 def brute_force_slots(classname, conf, output, team_dps, duration):
-    from app.app import is_amulet, is_dragon
+    #from app.app import is_amulet, is_dragon
     import inspect
     import io
     import slot.d
+    def is_dragon(obj):
+        return (inspect.isclass(obj) and issubclass(obj, slot.d.DragonBase)
+                and obj.__module__ != 'slot.d'
+                and obj.__module__ != 'slot')
     adv = classname(conf)
     exclude = ('Dear_Diary_RO_30', 'Dear_Diary_RO_60', 'Dear_Diary_RO_90')
     # amulets = list(set(c for _, c in inspect.getmembers(slot.a, is_amulet) if c.__qualname__ not in exclude))
@@ -166,7 +170,8 @@ def brute_force_slots(classname, conf, output, team_dps, duration):
         His_Clever_Brother,
         The_Lurker_in_the_Woods,
         Stellar_Show,
-        Candy_Couriers
+        Candy_Couriers,
+        Twinfold_Bonds
     ]
     adv_ele = adv.slots.c.ele.lower()
     results = []
@@ -308,7 +313,7 @@ def act_sum(actions, output):
     condensed = []
     for act in actions:
         if act[0] == 'x':
-            xseq = int(act[1:])
+            xseq = int(act[1:].replace('ex', ''))
             if xseq < p_xseq:
                 condensed = append_condensed(condensed, p_act)
             p_xseq = xseq
@@ -342,7 +347,8 @@ def act_sum(actions, output):
         elif idx > 0:
             output.write(' ')
         if act[0] == 'x' or act == 'fs':
-            output.write(act.replace('x', 'c'))
+            act = 'c' + act[1:]
+            output.write(act)
             p_type = 'x'
         else:
             if act == 'dshift':

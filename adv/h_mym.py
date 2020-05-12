@@ -9,13 +9,13 @@ class Halloween_Mym(Adv):
     conf = {}
     conf['slots.a'] = Primal_Crisis()+An_Ancient_Oath()
     conf['acl'] = """
-        `dragon, s=2
+        `dragon, s=1
         `s3, not self.s3_buff
         `s1
         `s2, cancel
         `fsf, x=4 and (s1.charged == self.sp_val(4))
     """
-    coab = ['Blade', 'Yuya', 'Serena']
+    coab = ['Blade', 'Tiki', 'Serena']
 
     conf['dragonform'] = {
         'act': 'c3 s',

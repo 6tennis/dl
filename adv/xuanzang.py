@@ -8,7 +8,8 @@ class Xuan_Zang(Adv):
     a3 = ('cc',0.06,'hp70')
     
     conf = {}
-    conf['slots.burn.a'] = Primal_Crisis()+Elegant_Escort()
+    conf['slots.a'] = The_Wyrmclan_Duo()+Primal_Crisis()
+    conf['slots.burn.a'] = Resounding_Rendition()+Elegant_Escort()
     conf['acl'] = """
         `dragon, s=2
         `s3, not self.s3_buff
@@ -16,7 +17,7 @@ class Xuan_Zang(Adv):
         `s2
         `fs, x=5
         """
-    coab = ['Blade', 'Marth', 'Serena']
+    coab = ['Blade', 'Marth', 'Tiki']
 
     def s1_proc(self, e):
         if self.mod('def')!= 1:

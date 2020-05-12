@@ -14,11 +14,7 @@ class Malka(Adv):
         `s3
         `fs, seq=5
         """
-    coab = ['Blade','Dagger','Halloween_Elisanne']
-
-    def d_slots(self):
-        if self.slots.c.has_ex('bow'):
-            self.conf.slot.a = RR()+JotS()
+    coab = ['Blade','Dagger','Peony']
 
 if __name__ == '__main__':
     from core.simulate import test_with_argv

@@ -9,7 +9,7 @@ class Laxi(Adv):
     comment = "a1 proc at 0s"
     
     conf = {}
-    conf['slots.burn.a'] = Primal_Crisis()+Elegant_Escort()
+    conf['slots.a'] = Primal_Crisis()+The_Wyrmclan_Duo()
     conf['slots.d'] = Gala_Mars()
     conf['acl'] = """
         `dragon, s
@@ -18,7 +18,7 @@ class Laxi(Adv):
         `s1
         `fs, x=5
         """
-    coab = ['Dagger', 'Marth', 'Serena']
+    coab = ['Dagger', 'Marth', 'Tiki']
 
     def prerun(self):
         self.hp = 0.0

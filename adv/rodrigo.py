@@ -21,7 +21,11 @@ class Rodrigo(Adv):
         self.afflics.poison('s1',120,0.582)
 
     def s2_proc(self, e):
+<<<<<<< HEAD
         self.afflics.poison('s2',120,0.582)
+=======
+        self.afflics.poison('s1',120,0.582)
+>>>>>>> 1d1a2d0e882ee84ecbf93aaeaae0d42a87ab6713
 
 if __name__ == '__main__':
     from core.simulate import test_with_argv

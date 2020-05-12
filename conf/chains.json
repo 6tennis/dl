@@ -32,7 +32,7 @@
             [
                 "achain",
                 0.12,
-                "hp<40"
+                "hp≤40"
             ],
             "lance"
         ],
@@ -40,7 +40,7 @@
             [
                 "achain",
                 0.14,
-                "hp<40"
+                "hp≤40"
             ],
             "axe"
         ],
@@ -48,7 +48,7 @@
             [
                 "achain",
                 0.14,
-                "hp<40"
+                "hp≤40"
             ],
             "lance"
         ],
@@ -56,7 +56,7 @@
             [
                 "achain",
                 0.15,
-                "hp<40"
+                "hp≤40"
             ],
             "staff"
         ],
@@ -299,6 +299,13 @@
                 0.13
             ],
             "axe"
+        ],
+        "Tiki": [
+            [
+                "dh",
+                0.20
+            ],
+            "tiki"
         ]
     },
     "wind": {
@@ -549,6 +556,17 @@
                 1
             ],
             "wand"
+        ],
+        "Sharena": [
+            [
+                "affself_paralysis",
+                0.13
+            ],
+            "sharena"
+        ],
+        "Peony": [
+            null,
+            "peony"
         ]
     },
     "shadow": {
@@ -624,7 +642,7 @@
             [
                 "achain",
                 0.14,
-                "hp<40"
+                "hp≤40"
             ],
             "sword"
         ],
@@ -632,7 +650,7 @@
             [
                 "achain",
                 0.15,
-                "hp<40"
+                "hp≤40"
             ],
             "axe"
         ],
@@ -735,6 +753,14 @@
         "Grace": [
             null,
             "grace"
+        ],
+        "Sharena": [
+            null,
+            "sharena"
+        ],
+        "Tiki": [
+            null,
+            "tiki"
         ]
     }
 }

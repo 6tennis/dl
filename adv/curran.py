@@ -1,4 +1,5 @@
 from core.advbase import *
+from slot.a import *
 from slot.d import *
 
 def module():
@@ -11,17 +12,16 @@ class Curran(Adv):
     a3 = ('lo',0.6)
 
     conf = {}
+    conf['slots.poison.a'] = Kung_Fu_Masters()+The_Plaguebringer()
     conf['slots.d'] = Fatalis()
     conf['slots.poison.d'] = Shinobi()
     conf['acl'] = """
-        if self.slots.d.name != 'Fatalis'
         `dragon.act("c3 s end")
-        end
         `s3, not self.s3_buff
         `s1
         `s2
         """
-    coab = ['Blade','Wand','Bow']
+    coab = ['Curran','Blade','Wand','Bow']
 
     def s1_proc(self, e):
         with Modifier("s1killer", "poison_killer", "hit", 0.6):

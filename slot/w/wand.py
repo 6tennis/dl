@@ -158,11 +158,18 @@ class Agito0UB_Jiu_Ci(Agito_Jiu_Ci):
     att = 1031
     s3 = agito_buffs['shadow'][0]
 
+class Agito_Camelot(WeaponBase):
+    ele = ['wind']
+    wt = 'wand'
+    att = 1590
+    s3 = agito_buffs['wind'][1]
+
+class Agito0UB_Camelot(Agito_Camelot):
+    att = 1031
+    s3 = agito_buffs['wind'][0]
+
 class UnreleasedAgitoStr_WaterWand(Agito_Brisingr):
     ele = ['water']
-
-class UnreleasedAgitoStr_WindWand(Agito_Brisingr):
-    ele = ['wind']
 
 class UnreleasedAgitoStr_LightWand(Agito_Brisingr):
     ele = ['light']
@@ -170,14 +177,11 @@ class UnreleasedAgitoStr_LightWand(Agito_Brisingr):
 class UnreleasedAgitoSpd_WaterWand(Agito_Jiu_Ci):
     ele = ['water']
 
-class UnreleasedAgitoSpd_WindWand(Agito_Jiu_Ci):
-    ele = ['wind']
-
 class UnreleasedAgitoSpd_LightWand(Agito_Jiu_Ci):
     ele = ['light']
 
 flame = Agito_Brisingr
 water = HDT2_Aquatic_Spiral
-wind = HDT2_Grand_Tempest
+wind = Agito_Camelot
 light = HDT2_Primeval_Thunder
 shadow = Agito_Jiu_Ci

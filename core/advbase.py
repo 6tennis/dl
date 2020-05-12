@@ -1042,6 +1042,15 @@ class Adv(object):
         # self.fs = self.a_fs
         self.fsf = self.a_fsf
         self.dodge = self.a_dodge
+        try:
+            self.a_x5ex = X(('x5ex', 5), self.conf.x5ex)
+            self.a_x5ex.atype = 'x'
+            self.a_x5ex.interrupt_by = ['fs', 's', 'dodge']
+            self.a_x5ex.cancel_by = ['fs', 's', 'dodge']
+            self.x4.cancel_by.append('x')
+            self.x5ex = self.a_x5ex
+        except:
+            pass
 
         self.hits = 0
         self.dragonform = None
@@ -1354,8 +1363,7 @@ class Adv(object):
         if prev.name[0] == 'x':
             if prev.index != 5:
                 x_next = prev.index + 1
-
-        a = getattr(self, 'x%d' % x_next)()
+        getattr(self, 'x%d' % x_next)()
         return 1
 
     def l_range_x(self, e):
@@ -1461,15 +1469,24 @@ class Adv(object):
         self.coab_list = self.coab
         if 'coabs' in self.conf:
             self.coab_list = self.conf['coabs']
-        from conf import coability
+        from conf import coability_dict
+        try:
+            self_coab = list(self.slots.c.coabs.keys())[0]
+        except:
+            self_coab = self.__class__.__name__
         for name in self.coab_list:
-            chain_dict = {**coability['all'], **coability[self.slots.c.ele]}
             try:
-                self.slots.c.coabs[name] = chain_dict[name]
+                self.slots.c.coabs[name] = coability_dict(self.slots.c.ele)[name]
             except:
                 pass
+        self.coab_list = list(self.slots.c.coabs.keys())
+        try:
+            self.coab_list.remove(self_coab)
+        except:
+            pass
 
-        self.d_slots()
+        if not ('forced' in self.conf.slots and self.conf.slots.forced):
+            self.d_slots()
         self.base_att = 0
 
         self.afflic_condition()
@@ -1576,9 +1593,9 @@ class Adv(object):
     def charge_p(self, name, percent, target=None):
         percent = percent / 100 if percent > 1 else percent
         if not target:
-            self.s1.charge(self.sp_convert(percent, self.conf.s1.sp))
-            self.s2.charge(self.sp_convert(percent, self.conf.s2.sp))
-            self.s3.charge(self.sp_convert(percent, self.conf.s3.sp))
+            self.s1.charge(self.sp_convert(percent, self.s1.sp))
+            self.s2.charge(self.sp_convert(percent, self.s2.sp))
+            self.s3.charge(self.sp_convert(percent, self.s3.sp))
         else:
             try:
                 skill = self.__dict__[target]
@@ -1617,9 +1634,10 @@ class Adv(object):
     def dmg_formula(self, name, dmg_coef):
         att = 1.0 * self.att_mod(name) * self.base_att
         armor = 10 * self.def_mod()
+        ele = self.mod(self.slots.c.ele) + 0.5
         # return float(dmg_coef) * self.dmg_mod(name) * self.att_mod() / self.def_mod()
         # return float(dmg_coef) * self.dmg_mod(name) * self.def_mod()
-        return 5.0 / 3 * dmg_coef * self.dmg_mod(name) * att / armor * 1.5  # true formula
+        return 5.0 / 3 * dmg_coef * self.dmg_mod(name) * att / armor * ele  # true formula
         # return att/armor * dmg_coef * self.dmg_mod(name)
 
     def l_true_dmg(self, e):
@@ -1810,7 +1828,6 @@ class Adv(object):
         rt = self.conf.rotation
         if self.o_rt != rt:
             print('cannot change rotation after run')
-            errrrrrrrrrrrrrrrrr()
         ret = ''
         ret += rt[p]
         p += 1
@@ -1825,7 +1842,6 @@ class Adv(object):
 
         if self.o_rt != rt:
             print('cannot change rotation after run')
-            errrrrrrrrrrrrrrrrr()
         ret = ''
         while (1):
             if p >= self.rt_len:
@@ -1845,7 +1861,6 @@ class Adv(object):
             xidx = int(rt[p + 1])
             if xidx > 5 or xidx < 1:
                 print(rt + '\nlocation:%d,%s' % (p + 1, xidx))
-                errrrrrrrrrrrrrrrr()
             ret += rt[p:p + 2]
             p += 2
         elif rt[p] in ['1', '2', '3', '4', '5'] and rt[p + 1] in ['x', 'c']:
@@ -1856,7 +1871,6 @@ class Adv(object):
             sidx = int(rt[p + 1])
             if sidx > 3 or sidx < 1:
                 print(rt + '\nlocation:%d,%s' % (p + 1, sidx))
-                errrrrrrrrrrrrrrrr()
             ret += rt[p:p + 2]
             p += 2
         elif rt[p:p + 2] == 'fs':
@@ -1874,7 +1888,6 @@ class Adv(object):
         else:
             print(rt + '\nlocation:%d' % (p))
             print(rt[p])
-            errrrrrrrrrrrrrrrrrr()
 
         if p >= self.rt_len:
             self.rotation_reset()

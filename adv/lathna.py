@@ -6,7 +6,6 @@ def module():
     return Lathna
 
 class Lathna(Adv):
-    comment = 'no poison'
     a1 = ('k_poison',0.15)
     a3 = ('dt', 0.25)
     
@@ -19,7 +18,24 @@ class Lathna(Adv):
         `s1a
         `s2, x=5
         """
-    coab = ['Ieyasu','Gala_Alex','Cleo']
+    coab = ['Ieyasu','Audric','Tiki']
+
+    def d_coabs(self):
+        if self.duration <= 120 and self.duration > 60:
+            self.coab = ['Ieyasu','Yaten','Tiki']
+        if self.duration <= 60:
+            self.coab = ['Ieyasu','Gala_Alex','Tiki']
+        if 'sim_afflict' in self.conf and self.conf.sim_afflict.efficiency > 0:
+            if self.duration <= 180 and self.duration > 120:
+                self.coab = ['Ieyasu','Wand','Cleo']
+            if self.duration <= 120 and self.duration > 60:
+                self.coab = ['Ieyasu','Wand','Tiki']
+            if self.duration <= 60:
+                self.coab = ['Ieyasu','Yaten','Tiki']
+    
+    def d_slots(self):
+        if self.duration > 120:
+            self.conf['slots.poison.d'] = Shinobi()
     
     conf['dragonform'] = {
         'act': 'c3 s c3 c3 c2 c2 c2',
@@ -42,10 +58,6 @@ class Lathna(Adv):
 
         'dodge.startup': 41 / 60.0, # dodge frames
     }
-
-    def d_slots(self):
-        if self.duration <= 120:
-            self.conf['slots.poison.a'] = An_Ancient_Oath()+The_Fires_of_Hate()
 
     def ds_proc(self):
         dmg = self.dmg_make('ds', 3.64, 's')
